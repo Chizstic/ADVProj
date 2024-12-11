@@ -1,0 +1,164 @@
+/* General Styles */
+body {
+    background-color: #f4f4f4; /* Neutral background for calm ambiance */
+    font-family: 'Roboto', sans-serif; /* Clean typography */
+    margin: 0;
+    padding: 0;
+}
+
+/* Header & Text */
+h1, h2, h3, h4, h5, h6 {
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #006241; /* Starbucks green */
+}
+
+.navbar-brand, .nav-link, .btn {
+    color: #fff !important;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #c4dfc5 !important; /* Lighter green for hover effect */
+}
+
+.btn-warning {
+    background-color: #c4dfc5; /* Complementary shade */
+    border: none;
+    color: #006241;
+}
+
+.btn-warning:hover {
+    background-color: #006241;
+    color: #fff;
+}
+
+/* Product Card */
+.box-element {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.box-element:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Product Thumbnail */
+.thumbnail {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 2px solid #006241; /* Green accent */
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+    filter: brightness(90%);
+}
+
+/* Product Info */
+.product {
+    padding: 20px;
+    text-align: center;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 22px;
+    color: #006241; /* Green for price */
+    font-weight: 700;
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    background-color: #006241; /* Green button */
+    color: white;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: white;
+    color: #006241;
+    border: 2px solid #006241;
+}
+
+/* 'View' Button */
+.btn-outline-success {
+    background-color: #fff;
+    color: #006241;
+    border: 2px solid #006241;
+}
+
+.btn-outline-success:hover {
+    background-color: #006241;
+    color: white;
+}
+
+/* Cart Icon */
+#cart-icon {
+    width: 30px;
+    height: 30px;
+}
+
+#cart-total {
+    background-color: #d50000; /* Bright red for contrast */
+    color: white;
+    font-size: 14px;
+    border-radius: 50%;
+    padding: 5px;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+}
+
+/* Footer */
+footer {
+    background-color: #006241;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer a {
+    color: #c4dfc5;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .col-lg-4 {
+        width: 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-lg-4 {
+        width: 100%;
+    }
+
+    .thumbnail {
+        height: 200px;
+    }
+}

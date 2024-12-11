@@ -1,0 +1,54 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <!-- Back to Store Button -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                <h5>Items: <strong>{{ order.get_cart_items }}</strong></h5>
+                <h5>Total: <strong>₱{{ order.get_cart_total }}</strong></h5>
+                <a class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="row">
+        <div class="col-12">
+            {% if items %}
+                {% for item in items %}
+                <div class="d-flex align-items-center mb-3 border rounded p-3">
+                    <img class="img-thumbnail" src="{{ item.product.imageURL }}" alt="{{ item.product.name }}" style="max-width: 100px; height: auto; margin-right: 20px;">
+                    <div class="flex-grow-1">
+                        <p class="mb-0"><strong>{{ item.product.name }}</strong></p>
+                        <p class="mb-0">₱{{ item.product.price|floatformat:2 }}</p>
+                    </div>
+                    <div class="text-center" style="min-width: 100px;">
+                        <p class="mb-1">Quantity: {{ item.quantity }}</p>
+                        <div class="d-flex justify-content-center">
+                            <img data-product="{{ item.product.id }}" data-action="add" class="chg-quantity update-cart mr-1" src="{% static 'images/arrow-up.png' %}" alt="Add" style="cursor: pointer; width: 20px; height: 20px;">
+                            <img data-product="{{ item.product.id }}" data-action="remove" class="chg-quantity update-cart ml-1" src="{% static 'images/arrow-down.png' %}" alt="Remove" style="cursor: pointer; width: 20px; height: 20px;">
+                        </div>
+                    </div>
+                    <div style="min-width: 100px;">
+                        <p class="mb-0">Total: ₱{{ item.get_total }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Your cart is empty. <a href="{% url 'store' %}">Continue shopping</a>.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

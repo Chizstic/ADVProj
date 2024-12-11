@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    {% load static %} <!-- Load static tag here -->
+
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .flex {
+            display: flex;
+        }
+        .h-screen {
+            height: 100vh;
+        }
+        .w-1-2 {
+            width: 50%;
+        }
+        .bg-primary {
+            background-color: #D3B38D;
+        }
+        .form-container {
+            position: relative;
+            background-color: #F7CBA9;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 355px;
+            height: auto;
+            text-align: center;
+            margin: auto;
+        }
+        .logo {
+            position: absolute;
+            top: -75px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 15px;
+            border: none;
+            border-bottom: 2px solid #A0522D;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+        }
+        .btn {
+            background-color: #A0522D;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #8B4513;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .signup {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .signup a {
+            color: #A0522D;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .signup a:hover {
+            text-decoration: underline;
+        }
+        /* Message Styles */
+        .messages {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-screen">
+        <!-- Image Section -->
+        <div class="w-1-2 bg-primary">
+            <img src="{% static 'images/logincover.png' %}" alt="Login Cover" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+
+        <!-- Form Section -->
+        <div class="w-1-2 bg-primary flex">
+            <div class="form-container">
+                <!-- Logo -->
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" width="150" height="100">
+
+                <!-- Form -->
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Display Messages -->
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div class="message {{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div>
+                        <input 
+                            type="text" 
+                            name="username" 
+                            id="username" 
+                            placeholder="Username" 
+                            required>
+                    </div>
+                    <div style="position: relative; margin-top: 15px;">
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password" 
+                            placeholder="Password" 
+                            required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
+
+                <!-- Sign-Up Link -->
+                <div class="signup">
+                    <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
