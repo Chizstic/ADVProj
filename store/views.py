@@ -98,37 +98,40 @@ def processOrder(request):
     data = json.loads(request.body)
 
     if request.user.is_authenticated:
-        # For authenticated users, retrieve the order from the database
+        # For authenticated users
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = float(data['form']['total'])  # Total is sent from the frontend
+        total = float(data['form']['total'])
         order.transaction_id = transaction_id
     else:
-        # For non-authenticated users, retrieve order data from cookies
-        cookieData = cookieCart(request)
-        order = cookieData['order']
-        total = cookieData['order']['get_cart_total']  # Get total from cookie data
+        # For non-authenticated users
+        cookie_data = cookieCart(request)
+        items = cookie_data['items']
+        total = cookie_data['order']['get_cart_total']
+        
+        # Create a temporary order object for non-authenticated users
+        order = Order(
+            complete=False,
+            transaction_id=transaction_id
+        )
 
-    # Now you can safely compare total
-    if total == float(order['get_cart_total']):  # Make sure to compare float values
-        # If the totals match, mark the order as complete
-        if request.user.is_authenticated:
-            order.complete = True
-            order.save()
+    # Verify total
+    if total == float(order.get_cart_total):  # Use `get_cart_total` method or pre-calculated total
+        order.complete = True
+        order.save()
 
-        # If shipping is enabled, create a shipping address
-        if order.get('shipping', False):  # Access 'shipping' from dictionary if non-authenticated
+        # Save shipping information if required
+        if order.shipping:
             ShippingAddress.objects.create(
-                customer=request.user.customer if request.user.is_authenticated else None,
+                customer=customer if request.user.is_authenticated else None,
                 order=order,
                 address=data['shipping']['address'],
                 city=data['shipping']['city'],
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
             )
-    
-    return JsonResponse('Payment submitted..', safe=False)
 
+    return JsonResponse('Payment submitted..', safe=False)
 
 def sign_up(request):
     if request.method == 'POST':

@@ -71,17 +71,19 @@
 </div>
 
 <script type="text/javascript">
+    var user = "{{ request.user|safe }}";
+    var csrftoken = "{{ csrf_token|safe }}";
     var shipping = '{{ order.shipping }}';
     var total = '{{ order.get_cart_total }}';
 
     // Handle hiding/shipping info for digital products
-    if (shipping == 'False') {
+    if (shipping === 'False') {
         document.getElementById('shipping-info').innerHTML = '';
     }
-    if (user != 'AnonymousUser') {
+    if (user !== 'AnonymousUser') {
         document.getElementById('user-info').innerHTML = '';
     }
-    if (shipping == 'False' && user != 'AnonymousUser') {
+    if (shipping === 'False' && user !== 'AnonymousUser') {
         document.getElementById('form-wrapper').classList.add("hidden");
         document.getElementById('payment-info').classList.remove("hidden");
     }
@@ -114,16 +116,16 @@
             'zipcode': null,
         };
 
-        if (shipping != 'False') {
-            shippingInfo.address = form.address.value;
-            shippingInfo.city = form.city.value;
-            shippingInfo.state = form.state.value;
-            shippingInfo.zipcode = form.zipcode.value;
+        if (shipping !== 'False') {
+            shippingInfo.address = document.querySelector("input[name='address']").value;
+            shippingInfo.city = document.querySelector("input[name='city']").value;
+            shippingInfo.state = document.querySelector("input[name='state']").value;
+            shippingInfo.zipcode = document.querySelector("input[name='zipcode']").value;
         }
 
-        if (user == 'AnonymousUser') {
-            userFormData.name = form.name.value;
-            userFormData.email = form.email.value;
+        if (user === 'AnonymousUser') {
+            userFormData.name = document.querySelector("input[name='name']").value;
+            userFormData.email = document.querySelector("input[name='email']").value;
         }
 
         console.log('Shipping Info:', shippingInfo);
@@ -138,13 +140,22 @@
             },
             body: JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo }),
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then((data) => {
             console.log('Success:', data);
             alert('Transaction completed');
             cart = {};
             document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/";
             window.location.href = "{% url 'store' %}";
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('There was an error processing your payment. Please try again.');
         });
     }
 </script>
