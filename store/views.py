@@ -138,9 +138,11 @@ def sign_up(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()  # Create the user
-            user.is_admin = True  # Set the user as a superuser
-            user.is_staff = True  # Ensure the user has staff privileges
-            user.is_superuser = True
+            
+            # Do not make the user an admin; keep them as a regular user
+            user.is_admin = False  # Explicitly set the user as not an admin
+            user.is_staff = False  # Ensure the user does not have staff privileges
+            user.is_superuser = False  # Ensure the user is not a superuser
             user.save()  # Save the updated user object
 
             auth_login(request, user)  # Log the user in immediately using the correct function
@@ -153,7 +155,7 @@ def sign_up(request):
             )
             customer.save()
 
-            messages.success(request, 'Account created successfully and you are now an admin!')
+            messages.success(request, 'Account created successfully!')
             return redirect('login')  # Redirect to the login page after successful signup
         else:
             messages.error(request, 'Error occurred during signup')
