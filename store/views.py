@@ -16,6 +16,53 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Customer
 
+
+def sign_up(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()  # Create the user
+            
+            # Do not make the user an admin; keep them as a regular user
+            user.is_admin = False  # Explicitly set the user as not an admin
+            user.is_staff = False  # Ensure the user does not have staff privileges
+            user.is_superuser = False  # Ensure the user is not a superuser
+            user.save()  # Save the updated user object
+
+            auth_login(request, user)  # Log the user in immediately using the correct function
+
+            # Create a Customer object and save it to the database
+            customer = Customer.objects.create(
+                user=user,  # Associate the user with the customer
+                name=request.POST.get('name', ''),  # Get the name from form or set an empty string
+            )
+            customer.save()
+
+            messages.success(request, 'Account created successfully!')
+            return redirect('login')  # Redirect to the login page after successful signup
+        else:
+            messages.error(request, 'Error occurred during signup')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'store/signup.html', {'form': form})
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('store')  # Redirect to the store page after login
+        else:
+            messages.error(request, "Invalid credentials")
+    return render(request, 'store/login.html')
+
+def logout(request):
+    auth_logout(request)
+    return redirect('login')
+
 def store(request):
 
      if request.user.is_authenticated:
@@ -66,6 +113,8 @@ def checkout(request):
      
      context = {'items':items, 'order':order, 'cartItems': cartItems}
      return render(request, 'store/checkout.html', context)
+
+
 def updateItem(request):
      data = json.loads(request.body)
      productId = data['productId']
@@ -132,50 +181,3 @@ def processOrder(request):
             )
 
     return JsonResponse('Payment submitted..', safe=False)
-
-def sign_up(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()  # Create the user
-            
-            # Do not make the user an admin; keep them as a regular user
-            user.is_admin = False  # Explicitly set the user as not an admin
-            user.is_staff = False  # Ensure the user does not have staff privileges
-            user.is_superuser = False  # Ensure the user is not a superuser
-            user.save()  # Save the updated user object
-
-            auth_login(request, user)  # Log the user in immediately using the correct function
-
-            # Create a Customer object and save it to the database
-            customer = Customer.objects.create(
-                user=user,  # Associate the user with the customer
-                name=request.POST.get('name', ''),  # Get the name from form or set an empty string
-                email=user.email  # Use the user's email
-            )
-            customer.save()
-
-            messages.success(request, 'Account created successfully!')
-            return redirect('login')  # Redirect to the login page after successful signup
-        else:
-            messages.error(request, 'Error occurred during signup')
-    else:
-        form = UserCreationForm()
-
-    return render(request, 'store/signup.html', {'form': form})
-
-def login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            auth_login(request, user)
-            return redirect('store')  # Redirect to the store page after login
-        else:
-            messages.error(request, "Invalid credentials")
-    return render(request, 'store/login.html')
-
-def logout(request):
-    auth_logout(request)
-    return redirect('login')
