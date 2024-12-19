@@ -33,7 +33,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-warning:hover {
     background-color: #006241;
-    color: #fff;
+    color: #088b5f;
 }
 
 /* Product Card */
@@ -95,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn:hover {
-    background-color: white;
+    background-color: #088b5f;
     color: #006241;
     border: 2px solid #006241;
 }
